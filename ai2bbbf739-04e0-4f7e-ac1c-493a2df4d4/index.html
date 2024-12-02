@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT 聊天功能</title>
+    <style>
+        body {
+            margin: 0;
+            height: 98vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            width: 95%;
+            max-width: 1024px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .message {
+            display: flex;
+            margin: 10px 0;
+        }
+        .message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
+            margin: 0 10px;
+        }
+        .message-content {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .sent .message-content {
+            background-color: #e1ffc7;
+            margin-left: auto;
+        }
+        .received .message-content {
+            background-color: #ffffff;
+        }
+        .input-area {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .send-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-history" id="chatHistory"></div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="输入消息...">
+            <button class="send-button" id="sendButton">发送</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#sendButton').click(function() {
+                const message = $('#messageInput').val();
+                if (message.trim() !== '') {
+                    appendMessage('sent', message);
+                    $('#messageInput').val('');
+                    receiveMessage(message);
+                }
+            });
+
+            function appendMessage(type, message) {
+                const messageHtml = `
+                    <div class="message ${type}">
+                        ${type === 'received' ? '<img src="https://cdn-icons-png.flaticon.com/512/2432/2432846.png">' : ''}
+                        <div class="message-content">${message}</div>
+                        ${type === 'sent' ? '<img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png">' : ''}
+                    </div>`;
+                $('#chatHistory').append(messageHtml);
+                $('#chatHistory').scrollTop($('#chatHistory')[0].scrollHeight);
+            }
+
+            function receiveMessage(sentMessage) {
+                setTimeout(() => {
+                    const responseMessage = "这是一个回复: " + sentMessage;
+                    appendMessage('received', responseMessage);
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
