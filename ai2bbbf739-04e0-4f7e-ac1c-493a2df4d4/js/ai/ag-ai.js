@@ -1,7 +1,7 @@
 function AGAI(data) {
     this.token = data['auth-token'];
     this.chat = function chat(system, question, history, success, fail) {
-        console.log('history', history)
+        // console.log('history', history)
         const messages = [];
         if (history) {
             for (const his of history) {
@@ -39,7 +39,7 @@ function AGAI(data) {
                 site: ""
             }),
             success: function (response) {
-                console.log(response);
+                // console.log(response);
                 const ss = response.split('\n');
                 let res = '';
                 for (const s of ss) {

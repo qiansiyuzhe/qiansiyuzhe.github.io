@@ -5,10 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT 4o mini</title>
+
+    <link rel="stylesheet" href="../css/atom-one-dark.min.css">
+
     <link rel="stylesheet" href="./css/chat-home.css">
-    <script src="./js/lib/crypto-js.min.js"></script>
-    <script src="./js/lib/jquery-3.6.0.min.js"></script>
-    <script src="./js/lib/marked.min.js"></script>
+
+    <script src="../js/lib/crypto-js.min.js"></script>
+    <script src="../js/lib/jquery-3.6.0.min.js"></script>
+    <script src="../js/lib/marked.min.js"></script>
+    <script src="../js/lib/highlight.min.js"></script>
+
     <script src="./js/ai/ag-ai.js"></script>
 </head>
 
@@ -17,12 +23,13 @@
     <div class="chat-container">
         <div class="chat-history" id="chatHistory"></div>
         <div class="input-area">
-            <input type="text" id="messageInput" placeholder="输入消息...">
+            <input type="text" class="input-text" id="messageInput" placeholder="输入消息...">
             <button class="send-button" id="sendButton">发送</button>
         </div>
     </div>
 
     <script>
+        let answerCount = 0;
         const history = [];
 
         function getUrlParameter(name) {
@@ -63,14 +70,25 @@
             });
 
             function appendMessage(type, message) {
+                answerCount++;
+                const answerId = 'answer' + answerCount;
                 const messageHtml = `
                     <div class="message ${type}">
-                        ${type === 'received' ? '<img src="https://cdn-icons-png.flaticon.com/512/2432/2432846.png">' : ''}
-                        <div class="message-content">${message}</div>
-                        ${type === 'sent' ? '<img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png">' : ''}
+                        ${type === 'received' ? '<img src="./images/robot.png">' : ''}
+                        <div class="message-content" id = ${answerId}>${message}</div>
+                        ${type === 'sent' ? '<img src="./images/user.png">' : ''}
                     </div>`;
                 $('#chatHistory').append(messageHtml);
                 $('#chatHistory').scrollTop($('#chatHistory')[0].scrollHeight);
+                // hljs.highlightAll();
+
+                // 高亮
+                const codeBlocks = document.getElementById(answerId).getElementsByTagName('code');
+                if (codeBlocks && codeBlocks.length > 0) {
+                    for (const codeBlock of codeBlocks) {
+                        hljs.highlightElement(codeBlock);
+                    }
+                }
             }
 
             function request(question) {
@@ -84,12 +102,13 @@
                 ai.chat('', question, history, function (res) {
                     // const responseMessage = "这是一个回复: " + sentMessage;
                     appendMessage('received', marked.marked(res));
+                    // appendMessage('received', mdToHtml(res));
                     $('#sendButton').attr('diabled', '');
                     $('#sendButton').text('发送');
 
                     // 加入历史
-                    history.push({role: 'user', content: question});
-                    history.push({role: 'assistant', content: res});
+                    history.push({ role: 'user', content: question });
+                    history.push({ role: 'assistant', content: res });
                 });
             }
         });
