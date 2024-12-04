@@ -5,84 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT 4o mini</title>
-    <style>
-        body {
-            margin: 0;
-            height: 98vh;
-            display: flex;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-
-        .chat-container {
-            width: 95%;
-            max-width: 1024px;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .chat-history {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        .message {
-            display: flex;
-            margin: 10px 0;
-        }
-
-        .message img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #4CAF50;
-            margin: 0 10px;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .sent .message-content {
-            background-color: #e1ffc7;
-            margin-left: auto;
-        }
-
-        .received .message-content {
-            background-color: #ffffff;
-        }
-
-        .input-area {
-            display: flex;
-            margin-top: 10px;
-        }
-
-        .input-area input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        .send-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-    <script src="./js/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="./css/chat-home.css">
+    <script src="./js/lib/crypto-js.min.js"></script>
+    <script src="./js/lib/jquery-3.6.0.min.js"></script>
+    <script src="./js/lib/marked.min.js"></script>
+    <script src="./js/ai/ag-ai.js"></script>
 </head>
 
 <body>
@@ -95,7 +22,6 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
         function getUrlParameter(name) {
@@ -123,9 +49,7 @@
                 return;
             }
             const encryData = "b53kNat6fcv/LggZAfXnG4Zz3hLxxF45eDQOeRXN5Aqq22yL83gKZBUTBjiamHjZo61xTC29AaZ22IQu5ux2cLvxaIVDjem0WduAb6qteXMkNIVbIXu4l50bXBV8ae1WS2PSYNGA4DTgDqOrSCCmZkvhYXMnEYsESyhJ7qt8rdk8URuRtlBQvEjBYPB/qXQ0S2PSYNGA4DTgDqOrSCCmZgk0jQC8xR8sKYhBiDps3UIIkekfosjDEr9RirttZPjZKKaOTSL0v7zeIkUhsIp4ggLQhaU3DNc77UDwRPVYxv4QQoiR2G2GvIlvYjJdY5QgkV1BqkDjoOVrzD5rUZX4/nFITNRexJOp8TL1VCWnr/4geLB+pQJWyl/9FmhG9bH09smEPd62GbZK7sRIaPXQTYx4Ptzr8r0VoSaelY/az8MnJn9c0bJN5PPQjNQ+Nak7";
-            console.log('key', key);
             const data = decrypt(encryData, key);
-            console.log('data', data);
             $("#data").text(data)
 
             $('#sendButton').click(function () {
@@ -133,7 +57,7 @@
                 if (message.trim() !== '') {
                     appendMessage('sent', message);
                     $('#messageInput').val('');
-                    receiveMessage(message);
+                    request(message);
                 }
             });
 
@@ -148,94 +72,19 @@
                 $('#chatHistory').scrollTop($('#chatHistory')[0].scrollHeight);
             }
 
-            function receiveMessage(sentMessage) {
-                // setTimeout(() => {
-                // const responseMessage = "这是一个回复: " + sentMessage;
-                // appendMessage('received', responseMessage);
-                request(sentMessage);
-                // }, 1000);
-            }
-
             function request(question) {
                 const data = JSON.parse(getData());
-                console.log(question)
-                console.log('data', data)
                 const authToken = data['auth-token'];
-                console.log('authToken', authToken)
 
                 $('#sendButton').attr('diabled', 'diabled');
                 $('#sendButton').text('发送中...');
-                $.ajax({
-                    type: 'POST',
-                    url: 'https://s.aginnov.com/agai/chat/completions/fsse',
-                    headers: {
-                        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,zh-TW;q=0.5',
-                        'Authorization': 'Bearer ' + authToken,
-                        // 'Connection': 'keep-alive',
-                        // 'Origin': 'https://www.aginnov.com',
-                        // 'Referer': 'https://www.aginnov.com/',
-                        // 'Sec-Fetch-Dest': 'empty',
-                        // 'Sec-Fetch-Mode': 'cors',
-                        // 'Sec-Fetch-Site': 'same-site',
-                        // 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0',
-                        'accept': 'text/event-stream',
-                        'content-type': 'application/json',
-                        // 'sec-ch-ua': '"Chromium";v="130", "Microsoft Edge";v="130", "Not?A_Brand";v="99"',
-                        // 'sec-ch-ua-mobile': '?0',
-                        // 'sec-ch-ua-platform': '"Windows"'
-                    },
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        model: "gpt4o-mini",
-                        messages: [{
-                            role: "user",
-                            content: question,
-                            pictures: []
-                        }],
-                        webAccess: false,
-                        question: question,
-                        searchFor: "",
-                        customSearch: true,
-                        site: ""
-                    }),
-                    success: function (response) {
-                        console.log(response);
-                        const ss = response.split('\n');
-                        let res = '';
-                        for (const s of ss) {
-                            if (!s.trim()) {
-                                continue;
-                            }
-                            const s1 = s.trim().replace('data: ', '');
-                            if ('[DONE]' === s1) {
-                                break
-                            }
-                            const obj1 = JSON.parse(s1);
-                            const cho1 = obj1['choices'];
-                            if (!cho1 || !cho1[0]) {
-                                continue;
-                            }
-                            const d = cho1[0]['delta'];
-                            if (!d) {
-                                continue;
-                            }
-                            if (!d['content']) {
-                                continue;
-                            }
-                            res += d['content'];
-                        }
 
-                        console.log(res);
-                        // const responseMessage = "这是一个回复: " + sentMessage;
-                        appendMessage('received', res);
-                        $('#sendButton').attr('diabled', '');
-                        $('#sendButton').text('发送');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#sendButton').attr('diabled', '');
-                        $('#sendButton').text('发送');
-                    }
+                const ai = new AGAI(data);
+                ai.chat('', question, null, function (res) {
+                    // const responseMessage = "这是一个回复: " + sentMessage;
+                    appendMessage('received', marked.marked(res));
+                    $('#sendButton').attr('diabled', '');
+                    $('#sendButton').text('发送');
                 });
             }
         });
