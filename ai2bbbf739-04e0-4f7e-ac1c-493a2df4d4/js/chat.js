@@ -54,13 +54,35 @@ function chatInit() {
     } else {
         alert('Empty key');
     }
+
+    resizeChatInput();
 }
 
 function chat() {
     const message = $('#messageInput').val();
     if (message.trim() !== '') {
-        appendMessage('sent', message);
-        $('#messageInput').val('');
+        appendMessage('sent', message.replace('\n', '<br/>'));
+        $('#messageInput').val('').trigger('input');
         request(message);
     }
+}
+
+function resizeChatInput() {
+    const textarea = document.getElementById('messageInput');
+    const maxRows = 5;
+
+   $('#messageInput').on('input', () => {
+        const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight);
+        const maxHeight = lineHeight * maxRows;
+
+        let minHeight = textarea.scrollHeight - lineHeight * 2 - 10;
+        if (textarea.value) {
+            const row = textarea.value.split('\n').length;
+            minHeight = Math.max(minHeight, row * lineHeight);
+        } else {
+            minHeight = lineHeight;
+        }
+        textarea.style.height = 'auto'; // 重置高度
+        textarea.style.height = Math.min(minHeight, maxHeight) + 'px'; // 设置新高度
+    });
 }

@@ -6,15 +6,18 @@ body {
     font-family: Arial, sans-serif;
     background-color: #222;
     color: #fff;
+    justify-content: center;
+    align-items: center;
 }
 
 .chat-container {
     width: 95%;
     max-width: 1024px;
-    margin: auto;
+    height: 90%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* background-color: #eee; */
 }
 
 .chat-history {
@@ -70,7 +73,8 @@ body {
     margin-top: 10px;
 }
 
-.input-area input {
+.input-area textarea {
+    height: 1.5em;
     flex: 1;
     padding: 10px;
     border: 1px solid #555;
@@ -78,13 +82,27 @@ body {
     margin-right: 10px;
     background-color: #222;
     color: #fff;
+    vertical-align: middle;
+    line-height: 1.5em;
+    resize: none;
+    /* 允许滚动 */
+    overflow: auto;
+    /* 对 Firefox 隐藏滚动条 */
+    scrollbar-width: none;
+    /* 对 IE 和 Edge 隐藏滚动条 */
+    -ms-overflow-style: none;
+}
+
+.input-area textarea::-webkit-scrollbar {
+    /* 对 Chrome, Safari 和 Opera 隐藏滚动条 */
+    display: none;
 }
 
 .send-button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 9px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
