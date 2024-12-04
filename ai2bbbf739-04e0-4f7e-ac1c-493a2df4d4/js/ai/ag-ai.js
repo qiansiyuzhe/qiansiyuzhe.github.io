@@ -1,6 +1,14 @@
 function AGAI(data) {
     this.token = data['auth-token'];
     this.chat = function chat(system, question, history, success, fail) {
+        console.log('history', history)
+        const messages = [];
+        if (history) {
+            for (const his of history) {
+                messages.push(his);
+            }
+        }
+        messages.push({ role: "user", content: question, pictures: [] });
         $.ajax({
             type: 'POST',
             url: 'https://s.aginnov.com/agai/chat/completions/fsse',
@@ -23,11 +31,7 @@ function AGAI(data) {
             contentType: 'application/json',
             data: JSON.stringify({
                 model: "gpt4o-mini",
-                messages: [{
-                    role: "user",
-                    content: question,
-                    pictures: []
-                }],
+                messages: messages,
                 webAccess: false,
                 question: question,
                 searchFor: "",

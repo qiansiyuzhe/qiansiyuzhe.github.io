@@ -23,6 +23,7 @@
     </div>
 
     <script>
+        const history = [];
 
         function getUrlParameter(name) {
             // 使用正则表达式从 URL 中提取参数
@@ -80,11 +81,15 @@
                 $('#sendButton').text('发送中...');
 
                 const ai = new AGAI(data);
-                ai.chat('', question, null, function (res) {
+                ai.chat('', question, history, function (res) {
                     // const responseMessage = "这是一个回复: " + sentMessage;
                     appendMessage('received', marked.marked(res));
                     $('#sendButton').attr('diabled', '');
                     $('#sendButton').text('发送');
+
+                    // 加入历史
+                    history.push({role: 'user', content: question});
+                    history.push({role: 'assistant', content: res});
                 });
             }
         });
