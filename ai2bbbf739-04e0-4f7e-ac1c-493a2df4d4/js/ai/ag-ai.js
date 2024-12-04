@@ -1,5 +1,5 @@
 function AGAI(data) {
-    this.token = data['auth-token'];
+    this.token = data.get('auth-token');
     this.chat = function chat(system, question, history, success, fail) {
         // console.log('history', history)
         const messages = [];
