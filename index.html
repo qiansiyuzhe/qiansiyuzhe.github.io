@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>潜思宇哲</title>
-    </head>
 
-    <body>
-        <label>v1.2.7</label>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>潜思宇哲</title>
+
+    <script src="./js/lib/jquery-3.6.0.min.js"></script>
+
+    <script src="./js/version.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#version').text(version);
+        });
+    </script>
+</head>
+
+<body>
+    <label id="version">v1.0.0</label>
+
+</body>
+
 </html>
