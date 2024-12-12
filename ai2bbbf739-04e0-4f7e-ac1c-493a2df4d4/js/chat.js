@@ -7,9 +7,9 @@ function appendMessage(type, message) {
     const answerId = 'answer' + answerCount;
     const messageHtml = `
         <div class="message ${type}">
-            ${type === 'received' ? '<img src="./images/robot.png">' : ''}
+            ${type === 'received' ? '<div class="avatar robot"></div>' : ''}
             <div class="message-content" id = ${answerId}>${message}</div>
-            ${type === 'sent' ? '<img src="./images/user.png">' : ''}
+            ${type === 'sent' ? '<div class="avatar user"></div>' : ''}
         </div>`;
     $('#chatHistory').append(messageHtml);
     $('#chatHistory').scrollTop($('#chatHistory')[0].scrollHeight);
@@ -29,6 +29,7 @@ function request(question) {
     $('#sendButton').text('发送中...');
 
     const ai = new AGAI(data);
+    // const res = "哈哈哈";
     ai.chat('', question, history, function (res) {
         appendMessage('received', marked.marked(res));
         $('#sendButton').attr('diabled', '');
@@ -71,7 +72,7 @@ function resizeChatInput() {
     const textarea = document.getElementById('messageInput');
     const maxRows = 5;
 
-   $('#messageInput').on('input', () => {
+    $('#messageInput').on('input', () => {
         const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight);
         const maxHeight = lineHeight * maxRows;
 
