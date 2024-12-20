@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>莫问运势</title>
+</head>
+
+<body>
+
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/cn/index.js"></script>
+    <script>
+        const cozeWebSDK = new CozeWebSDK.WebChatClient({
+            config: {
+                bot_id: '7450317217721368616',
+            },
+            componentProps: {
+                title: 'Coze',
+            },
+            ui: {
+                base: {
+                    icon: './images/icon_128x128.png',
+                    // layout: 'mobile'
+                },
+                footer: {
+                    isShow: false,
+                    expressionText: '默问运势',
+                },
+                chatBot: {
+                    title: "默问运势",
+                    uploadable: false,
+                    // width: '96%',
+                    el: undefined,
+                }
+            }
+        });
+
+        cozeWebSDK.showChatBot();
+    </script>
+
+</body>
+
+</html>
